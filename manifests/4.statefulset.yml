@@ -3,8 +3,8 @@ kind: StatefulSet
 metadata:
   name: mysql
 spec:
-  serviceName: "mysqldb"             # ← This now matches the Service name
-  replicas: 3
+  serviceName: "mysqldb"
+  replicas: 1
   selector:
     matchLabels:
       app: app-database
@@ -16,22 +16,20 @@ spec:
       imagePullSecrets:
         - name: dockerhub-secret
       containers:
-        - name: mysql
-          image: mysql:8.0             # ← Use a MySQL database image
+        - name: nginx
+          image: shaikmustafa/clientapp:dbimage
           ports:
-            - containerPort: 3306
-              name: mysql
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: "YourRootPassword" # ← set secure password as needed
+            - containerPort: 80
+              name: web
           volumeMounts:
-            - name: data
-              mountPath: /var/lib/mysql   # ← MySQL’s data directory
+            - name: www
+              mountPath: /usr/share/nginx/html
   volumeClaimTemplates:
     - metadata:
-        name: data
+        name: www
       spec:
-        accessModes: [ "ReadWriteOnce" ]
+        accessModes: 
+          - ReadWriteOnce
         resources:
           requests:
             storage: 1Gi
