@@ -4,7 +4,7 @@ metadata:
   name: mysql
 spec:
   serviceName: "mysqldb"             # ← This now matches the Service name
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: app-database
